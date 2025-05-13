@@ -27,8 +27,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ParcialCalculadoraTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ParcialContent(Modifier.padding(innerPadding))
+                Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
+                    MainContent(Modifier.padding(paddingValues))
                 }
             }
         }
@@ -36,9 +36,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ParcialContent(modifier: Modifier = Modifier) {
-    var notaText by remember { mutableStateOf("") }
-    val context = LocalContext.current
+fun MainContent(modifier: Modifier = Modifier) {
+    var inputNota by remember { mutableStateOf("") }
+    val contexto = LocalContext.current
 
     Column(
         modifier = modifier
@@ -48,23 +48,24 @@ fun ParcialContent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Parcial #1", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        Text("Primer Parcial", fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Raul Rojas")
-        Text("Daniel Tovares")
+        Text("Autores:")
+        Text("Raul Rojas 9-756-1052")
+        Text("Daniel Tovares 8-992-1618")
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = notaText,
-            onValueChange = { input ->
-                if (input.all { it.isDigit() }) {
-                    notaText = input
+            value = inputNota,
+            onValueChange = { texto ->
+                if (texto.all { it.isDigit() }) {
+                    inputNota = texto
                 }
             },
-            label = { Text("Ingrese la nota a validar") },
+            label = { Text("Digite la nota a evaluar") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -73,22 +74,22 @@ fun ParcialContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                val nota = notaText.toIntOrNull()
-                val resultado = when {
-                    nota == null || nota < 0 || nota > 100 -> "Nota inválida"
-                    nota >= 91 -> "A (Excelente)"
-                    nota >= 81 -> "B (Bueno)"
-                    nota >= 71 -> "C (Regular)"
-                    nota >= 61 -> "D (Más o menos regular)"
-                    else -> "No Aprobado"
+                val valorNota = inputNota.toIntOrNull()
+                val mensaje = when {
+                    valorNota == null || valorNota < 0 || valorNota > 100 -> "Nota no válida"
+                    valorNota >= 91 -> "A (Excelente)"
+                    valorNota >= 81 -> "B (Bueno)"
+                    valorNota >= 71 -> "C (Regular)"
+                    valorNota >= 61 -> "D (Mas o menos regular)"
+                    else -> "No aprobado"
                 }
 
-                Toast.makeText(context, "Resultado: $resultado", Toast.LENGTH_LONG).show()
+                Toast.makeText(contexto, "Resultado: $mensaje", Toast.LENGTH_LONG).show()
             },
             shape = RoundedCornerShape(50),
             modifier = Modifier.width(200.dp)
         ) {
-            Text("Validar")
+            Text("Evaluar")
         }
     }
 }
